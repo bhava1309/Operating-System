@@ -1,0 +1,41 @@
+#include <stdio.h>
+
+#define MAX_PROCESSES 10
+
+typedef struct {
+    int id;
+    int execution_time;
+} Process;
+
+void scheduleProcesses(Process processes[], int n) {
+    int completed = 0;
+    int total_time = 0;
+
+    while (completed < n) {
+        int min_index = -1;
+        for (int i = 0; i < n; i++) {
+            if (processes[i].execution_time > 0 && (min_index == -1 || processes[i].execution_time < processes[min_index].execution_time)) {
+                min_index = i;
+            }
+        }
+        if (min_index != -1) {
+            total_time += processes[min_index].execution_time;
+            printf("Executing Process ID: %d, Execution Time: %d\n", processes[min_index].id, processes[min_index].execution_time);
+            processes[min_index].execution_time = 0; // Mark as completed
+            completed++;
+        }
+    }
+}
+
+int main() {
+    Process processes[MAX_PROCESSES] = {
+        {1, 5},
+        {2, 2},
+        {3, 8},
+        {4, 1}
+    };
+    
+    int n = 4;  
+    scheduleProcesses(processes, n);
+    return 0;
+}
