@@ -1,0 +1,37 @@
+#include <stdio.h>
+
+struct Process {
+    int id;
+    int burst_time;
+};
+
+void findWaitingTime(struct Process proc[], int n, int waiting_time[]) {
+    waiting_time[0] = 0; // First process has no waiting time
+    for (int i = 1; i < n; i++) {
+        waiting_time[i] = waiting_time[i - 1] + proc[i - 1].burst_time;
+    }
+}
+
+void findTurnAroundTime(struct Process proc[], int n, int waiting_time[], int turn_around_time[]) {
+    for (int i = 0; i < n; i++) {
+        turn_around_time[i] = proc[i].burst_time + waiting_time[i];
+    }
+}
+
+void findavgTime(struct Process proc[], int n) {
+    int waiting_time[n], turn_around_time[n];
+    findWaitingTime(proc, n, waiting_time);
+    findTurnAroundTime(proc, n, waiting_time, turn_around_time);
+
+    printf("Process ID\tBurst Time\tWaiting Time\tTurnaround Time\n");
+    for (int i = 0; i < n; i++) {
+        printf("%d\t\t%d\t\t%d\t\t%d\n", proc[i].id, proc[i].burst_time, waiting_time[i], turn_around_time[i]);
+    }
+}
+
+int main() {
+    struct Process proc[] = { {1, 5}, {2, 3}, {3, 8} };
+    int n = sizeof(proc) / sizeof(proc[0]);
+    findavgTime(proc, n);
+    return 0;
+}
