@@ -1,0 +1,28 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <dirent.h>
+
+void listFiles(const char *path) {
+    struct dirent *entry;
+    DIR *dp = opendir(path);
+
+    if (dp == NULL) {
+        perror("opendir");
+        return;
+    }
+
+    while ((entry = readdir(dp))) {
+        if (entry->d_type == DT_REG) { // Check if it's a regular file
+            printf("File: %s\n", entry->d_name);
+        }
+    }
+
+    closedir(dp);
+}
+
+int main() {
+    const char *directoryPath = "."; // Current directory
+    listFiles(directoryPath);
+    return 0;
+}
