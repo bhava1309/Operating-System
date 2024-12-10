@@ -1,0 +1,33 @@
+#include <stdio.h>
+
+#define MAX_BLOCKS 100
+
+// Structure to represent a memory block
+struct Block {
+    int size;
+    int isFree;
+};
+
+// Function to implement the first fit algorithm
+void firstFit(struct Block blocks[], int n, int size) {
+    for (int i = 0; i < n; i++) {
+        if (blocks[i].isFree && blocks[i].size >= size) {
+            blocks[i].isFree = 0; // Mark block as allocated
+            printf("Allocated %d bytes in block %d\n", size, i);
+            return;
+        }
+    }
+    printf("No suitable block found for %d bytes\n", size);
+}
+
+int main() {
+    struct Block blocks[MAX_BLOCKS] = {
+        {100, 1}, {500, 1}, {200, 1}, {300, 1}, {600, 1}
+    };
+    int n = 5; // Number of blocks
+
+    firstFit(blocks, n, 212); // Requesting 212 bytes
+    firstFit(blocks, n, 417); // Requesting 417 bytes
+
+    return 0;
+}
