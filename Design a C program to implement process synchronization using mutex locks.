@@ -1,0 +1,37 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <pthread.h>
+
+#define NUM_THREADS 5
+
+pthread_mutex_t lock;
+int shared_resource = 0;
+
+void* increment_resource(void* threadid) {
+    long tid = (long)threadid;
+    pthread_mutex_lock(&lock);
+    
+    // Critical section
+    shared_resource++;
+    printf("Thread %ld incremented resource to %d\n", tid, shared_resource);
+    
+    pthread_mutex_unlock(&lock);
+    return NULL;
+}
+
+int main() {
+    pthread_t threads[NUM_THREADS];
+    pthread_mutex_init(&lock, NULL);
+
+    for (long i = 0; i < NUM_THREADS; i++) {
+        pthread_create(&threads[i], NULL, increment_resource, (void*)i);
+    }
+
+    for (int i = 0; i < NUM_THREADS; i++) {
+        pthread_join(threads[i], NULL);
+    }
+
+    printf("Final value of shared resource: %d\n", shared_resource);
+    pthread_mutex_destroy(&lock);
+    return 0;
+}
